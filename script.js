@@ -29,3 +29,20 @@ document.addEventListener('keydown', function (e) {
     closeModal();
   }
 });
+
+/* ========== SMOOTH SCROLLING ========== */
+
+const btnScrollTo = document.querySelector('.btn--scroll-to');
+const section1 = document.querySelector('#section--1');
+
+btnScrollTo.addEventListener('click', function () {
+  section1.scrollIntoView({ behavior: 'smooth' });
+
+  // Old way for old browsers
+  // const s1coords = section1.getBoundingClientRect(); // Getting coordinates to scroll section
+  // window.scrollTo({
+  //   left: s1coords.left + window.pageXOffset,
+  //   top: s1coords.top + window.pageYOffset,
+  //   behavior: 'smooth',
+  // });
+});
