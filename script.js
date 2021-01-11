@@ -16,6 +16,7 @@ const tabs = document.querySelectorAll('.operations__tab');
 const tabsContainer = document.querySelector('.operations__tab-container');
 const tabsContent = document.querySelectorAll('.operations__content');
 const allSections = document.querySelectorAll('.section');
+const imgTargets = document.querySelectorAll('img[data-src]');
 
 const openModal = function (e) {
   e.preventDefault();
@@ -71,6 +72,13 @@ navLinks.addEventListener('click', function (e) {
   }
 });
 
+// Learn more header button
+btnScrollTo.addEventListener('click', function () {
+  section1.scrollIntoView({ behavior: 'smooth' });
+});
+
+/* ========== OBSERVERS ========== */
+
 // Sticky navigation
 const navHeight = nav.getBoundingClientRect().height; // Responsive design
 
@@ -86,14 +94,9 @@ const headerObserver = new IntersectionObserver(stickyNav, {
   threshold: 0, // 0% of header visible => callbackfn
   rootMargin: `-${navHeight}px`, // better responsivnes
 });
-
 headerObserver.observe(header);
 
-// Learn more header button
-btnScrollTo.addEventListener('click', function () {
-  section1.scrollIntoView({ behavior: 'smooth' });
-});
-
+// Revealing sections on scroll
 const revealSection = function (entries, observer) {
   const [entry] = entries;
   console.log(entry);
@@ -112,6 +115,27 @@ allSections.forEach(section => {
   sectionObserver.observe(section);
   section.classList.add('section--hidden');
 });
+
+// Lazy loading img
+const loadImg = function (entries, observer) {
+  const [entry] = entries;
+
+  if (!entry.isIntersecting) return;
+  // Replace src with data-src
+  entry.target.src = entry.target.dataset.src;
+  entry.target.addEventListener('load', function () {
+    entry.target.classList.remove('lazy-img');
+  });
+  observer.unobserve(entry.target);
+};
+
+const imgObserver = new IntersectionObserver(loadImg, {
+  root: null,
+  threshold: 0,
+  rootMargin: '200px',
+});
+
+imgTargets.forEach(img => imgObserver.observe(img));
 
 /* ========== OPERATIONS SECTION ========== */
 
